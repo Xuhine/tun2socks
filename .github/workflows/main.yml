@@ -1,0 +1,28 @@
+name: Android Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v4
+        with:
+          repository: xjasonlyu/tun2socks
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Build Android ARM64
+        run: |
+          CGO_ENABLED=0 GOOS=android GOARCH=arm64 go build -ldflags "-w -s" -o tun2socks-linux-arm64
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tun2socks-android
+          path: tun2socks-linux-arm64
